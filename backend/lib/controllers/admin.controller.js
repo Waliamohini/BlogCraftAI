@@ -12,12 +12,10 @@ export const adminSignup = async (req, resp) => {
     const Data = req.body;
 
     if (!Data.company || !Data.email || !Data.password) {
-      return resp
-        .status(400)
-        .json({ error: "Company, email, or password is missing" });
+      return resp.status(400).json({ success: false, message: "Company, email, or password is missing" });
     }
 
-    // First check if the company has a request at all (any status)
+    // Find the company request (case-insensitive exact match)
     const escapedCompany = Data.company.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
     const anyRequest = await Request.findOne({
       company: new RegExp(`^${escapedCompany}$`, "i"),
@@ -27,25 +25,26 @@ export const adminSignup = async (req, resp) => {
 
     if (!anyRequest) {
       return resp.status(404).json({
-        warning: "No request found for this company. Make sure the company name matches exactly as submitted in your access request.",
+        success: false,
+        message: "No request found for this company. Make sure the company name matches exactly as submitted in your access request.",
       });
     }
 
     if (anyRequest.status.toLowerCase() === "pending") {
-      return resp.json({ warning: "Your company request is still pending approval. Please wait for super admin approval." });
+      return resp.json({ success: false, message: "Your company request is still pending approval. Please wait for super admin approval." });
     }
 
     if (anyRequest.status.toLowerCase() === "rejected") {
-      return resp.json({ warning: "Your company request was rejected. Please contact support for more information." });
+      return resp.json({ success: false, message: "Your company request was rejected. Please contact support for more information." });
     }
 
     // Check if admin already exists for this email
     const existingAdmin = await Admin.findOne({ email: Data.email });
     if (existingAdmin) {
-      return resp.status(409).json({ warning: "An account with this email already exists. Please sign in instead." });
+      return resp.status(409).json({ success: false, message: "An account with this email already exists. Please sign in instead." });
     }
 
-    const newAdmin = await Admin.create({
+    await Admin.create({
       company: anyRequest.company,
       email: Data.email,
       password: Data.password,
@@ -57,7 +56,7 @@ export const adminSignup = async (req, resp) => {
     });
   } catch (error) {
     console.error("adminSignup error:", error);
-    return resp.status(500).json({ error: "Internal server error" });
+    return resp.status(500).json({ success: false, message: error.message || "Internal server error" });
   }
 };
 
@@ -100,12 +99,10 @@ export const getAllBlogsAdmin = async (req, res) => {
 
 export const getAllComments = async (req, res) => {
   try {
-    // Use req.company set by auth middleware (trusted); fall back to query param for compatibility
     const company = req.company || req.query.company;
 
     const allComments = await Comment.find({}).populate("blog").sort({ createdAt: -1 });
 
-    // Filter to only comments whose associated blog belongs to this company (case-insensitive)
     const comments = company
       ? allComments.filter(
           (c) =>
@@ -123,7 +120,6 @@ export const getAllComments = async (req, res) => {
 
 export const getDashboard = async (req, res) => {
   try {
-    // Use req.company set by auth middleware (trusted); fall back to query param for compatibility
     const company = req.company || req.query.company;
 
     const companyFilter = company
@@ -134,7 +130,6 @@ export const getDashboard = async (req, res) => {
     const blogs = await Blog.countDocuments(companyFilter);
     const drafts = await Blog.countDocuments({ ...companyFilter, isPublished: false });
 
-    // Count only comments on blog posts belonging to this company (task 1.5)
     let comments;
     if (company) {
       const companyBlogIds = await Blog.find(companyFilter).distinct('_id');
@@ -183,7 +178,6 @@ export const approveCommentById = async (req, res) => {
 
 export const getAllEmails = async (req, res) => {
   try {
-    // Use req.company set by auth middleware (trusted); fall back to query param for compatibility
     const company = req.company || req.query.company;
 
     const query = company

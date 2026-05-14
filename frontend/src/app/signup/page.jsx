@@ -39,7 +39,7 @@ const Signup = () => {
       }
     } catch (err) {
       setStatus("error");
-      setMessage(err.response?.data?.message || "Something went wrong");
+      setMessage(err.response?.data?.message || err.response?.data?.error || "Something went wrong");
     } finally {
       setLoading(false);
     }

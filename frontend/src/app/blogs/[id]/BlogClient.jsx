@@ -281,22 +281,18 @@ const onSubmitHandler = async (e) => {
           dangerouslySetInnerHTML={{ __html: JSON.stringify(generateStructuredData(data)) }}
         />
       </Head>
-      <div className='bg-gray-200 py-10 px-5 md:px-12 lg:px-28'>
-        <div className='flex justify-between items-center'>
-          {/* <Link href='/'>
-            <Image src={assets.logo} width={180} alt='' className='w-[130px] sm:w-auto' />
-          </Link> */}
-          {/* <button className='flex items-center gap-2 font-medium py-1 px-3 sm:py-3 sm:px-6 border border-black shadow-[-7px_7px_0px_#000000]'>
-            Get started <Image src={assets.arrow} alt='' />
-          </button> */}
-        </div>
-        <div className='text-center my-44'>
-          <h1 className='text-2xl sm:text-5xl font-semibold max-w-[700px] mx-auto'>{data.title}</h1>
-          {/* <Image className='mx-auto mt-6 border border-white rounded-full' src={data.authorImg} width={60} height={60} alt='' /> */}
-          <p className='mt-1 pb-2 text-lg max-w-[740px] mx-auto'>{data.author}</p>
+      <div className='relative min-h-screen bg-gradient-to-br from-slate-100 via-indigo-100 to-purple-200 overflow-hidden flex flex-col'>
+        {/* Decorative blobs */}
+        <div className="absolute top-1/4 left-1/4 w-96 h-96 bg-indigo-300/30 rounded-full blur-3xl pointer-events-none" />
+        <div className="absolute bottom-1/4 right-1/4 w-80 h-80 bg-purple-300/30 rounded-full blur-3xl pointer-events-none" />
+        <div className="absolute top-1/2 left-0 w-64 h-64 bg-violet-200/25 rounded-full blur-3xl pointer-events-none -translate-y-1/2" />
+        <div className="absolute top-0 right-0 w-72 h-72 bg-indigo-200/20 rounded-full blur-3xl pointer-events-none" />
+        <div className='text-center flex-1 flex flex-col items-center justify-center relative z-10 pt-40 pb-28 px-5'>
+          <h1 className='text-3xl sm:text-6xl font-bold max-w-[700px] mx-auto leading-tight tracking-tight text-gray-900'>{data.title}</h1>
+          <p className='mt-4 pb-2 text-lg text-gray-600 max-w-[740px] mx-auto'>{data.author}</p>
           {/* Blog date and time */}
-          <div className='mt-2 text-sm text-gray-600 max-w-[740px] mx-auto'>
-            <span className='inline-flex items-center gap-1'>
+          <div className='mt-3 text-sm text-gray-500 max-w-[740px] mx-auto'>
+            <span className='inline-flex items-center gap-1.5'>
               <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
               </svg>

@@ -384,10 +384,26 @@ export const request = async (req, resp) => {
     if (!fullname || !company || !email || !businessType) {
       return resp.status(400).json({ success: false, message: "Some required fields are missing" });
     }
+
+    // Check for existing request with this email
+    const existing = await Request.findOne({ email });
+    if (existing) {
+      const statusMsg = existing.status === 'approved'
+        ? 'This email has already been approved. Please sign up.'
+        : existing.status === 'rejected'
+        ? 'A request with this email was previously rejected. Please contact support.'
+        : 'A request with this email is already pending review.';
+      return resp.status(409).json({ success: false, message: statusMsg });
+    }
+
     const created = await Request.create({ fullname, company, email, businessType });
     return resp.status(200).json({ success: true, message: "Your request has been sent successfully", data: created });
   } catch (error) {
     console.error('Request handler error:', error);
+    // Handle duplicate key as a fallback (race condition)
+    if (error.code === 11000) {
+      return resp.status(409).json({ success: false, message: "A request with this email already exists." });
+    }
     return resp.status(500).json({ success: false, message: error.message });
   }
 };

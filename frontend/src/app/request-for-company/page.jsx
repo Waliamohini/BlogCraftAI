@@ -4,6 +4,7 @@ import React, { useState } from 'react'
 import { useRouter } from 'next/navigation'
 import axios from 'axios'
 import Link from 'next/link'
+import { baseURL } from '@/config/api'
 
 const businessTypes = [
   'Technology', 'Healthcare', 'Finance', 'Education',
@@ -42,18 +43,19 @@ export default function RequestAccess() {
     setIsSubmitting(true)
     try {
       const res = await axios.post(
-        `${process.env.NEXT_PUBLIC_BASE_URL}/api/blog/request`,
+        `${baseURL}/api/blog/request`,
         formData,
         { headers: { 'Content-Type': 'application/json' } },
       )
-      if (res.status === 200 && res.data.success) {
+      if (res.data.success) {
         setSubmitted(true)
         setFormData({ fullname: '', company: '', email: '', businessType: '' })
       } else {
         setErrors({ api: res.data.message || 'Registration failed' })
       }
-    } catch {
-      setErrors({ api: 'Something went wrong. Please try again.' })
+    } catch (err) {
+      const msg = err?.response?.data?.message || 'Something went wrong. Please try again.'
+      setErrors({ api: msg })
     } finally {
       setIsSubmitting(false)
     }
