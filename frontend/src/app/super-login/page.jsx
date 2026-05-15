@@ -19,18 +19,20 @@ const SuperLogin = () => {
     try {
       setLoading(true);
       const { data } = await axios.post(`${baseURL}/api/super-admin/login`, { email, password });
+      console.log("Login response:", data);
       if (data.success) {
         setToken(data.token);
         localStorage.setItem("token", data.token);
         localStorage.setItem("email", email);
         localStorage.setItem("role", "super-admin");
-        axios.defaults.headers.common["Authorization"] = data.token;
+        axios.defaults.headers.common["Authorization"] = `Bearer ${data.token}`;
         router.push("/super-admin/dashboard");
       } else {
         toast.error(data.message || "Invalid credentials");
       }
     } catch (error) {
-      toast.error(error.message);
+      console.error("Login error:", error);
+      toast.error(error?.response?.data?.message || error.message || "Network error — is the backend running?");
     } finally {
       setLoading(false);
     }
