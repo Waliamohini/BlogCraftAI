@@ -1,8 +1,7 @@
 "use client";
 
 import { useState } from "react";
-
-const NEXT_PUBLIC_BASE_URL = process.env.NEXT_PUBLIC_BASE_URL || "http://localhost:5000";
+import { baseURL } from "@/config/api";
 
 const Setting = () => {
   const [email, setEmail] = useState("");
@@ -23,7 +22,7 @@ const Setting = () => {
 
     try {
       setLoading(true);
-      const response = await fetch(`${NEXT_PUBLIC_BASE_URL}/api/admin/updatePassword`, {
+      const response = await fetch(`${baseURL}/api/admin/updatePassword`, {
         method: "PUT",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ email, password }),

@@ -6,7 +6,7 @@ export async function generateMetadata({ params }) {
   
   try {
     // Get base URL with fallback
-    const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || 'http://localhost:5000';
+    const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || 'https://ai-blogs-with-super-admin.vercel.app';
     console.log('Using base URL:', baseUrl);
     
     // Fetch blog data by slug using native fetch (server-side)

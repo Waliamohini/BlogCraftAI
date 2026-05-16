@@ -1,16 +1,16 @@
 'use client'
 
 import SubsTableItem from '@/Components/AdminComponents/SubsTableItem'
-import axios from 'axios'
+import { useAppContext } from '@/context/AppContext'
 import React, { useEffect, useState } from 'react'
 import { toast } from 'react-toastify'
-
-const baseURL = process.env.NEXT_PUBLIC_BASE_URL || 'http://localhost:5000'
+import { baseURL } from '@/config/api'
 
 const Page = () => {
   const [emails, setEmails] = useState([])
   const [company, setCompany] = useState('')
   const [loading, setLoading] = useState(true)
+  const { axios } = useAppContext()
 
   useEffect(() => {
     const storedCompany = localStorage.getItem('company')

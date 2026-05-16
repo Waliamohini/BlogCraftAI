@@ -1,5 +1,5 @@
 export default function robots() {
-  const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || 'http://localhost:5000';
+  const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || 'https://ai-blogs-with-super-admin.vercel.app';
   
   return {
     rules: [

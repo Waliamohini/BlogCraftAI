@@ -3,8 +3,6 @@ import { createContext, useContext, useEffect, useState } from 'react';
 import axios from 'axios';
 import toast from 'react-hot-toast';
 import { baseURL } from '../config/api';
-// const baseURL = process.env.NEXT_PUBLIC_BASE_URL || 'http://localhost:5000';
-const company = localStorage.getItem("company");
 
 const AppContext = createContext();
 
