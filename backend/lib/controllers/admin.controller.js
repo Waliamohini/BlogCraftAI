@@ -16,9 +16,8 @@ export const adminSignup = async (req, resp) => {
     }
 
     // Find the company request (case-insensitive exact match)
-    const escapedCompany = Data.company.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
     const anyRequest = await Request.findOne({
-      company: new RegExp(`^${escapedCompany}$`, "i"),
+      company: { $regex: new RegExp(`^${Data.company.trim()}$`, 'i') },
     });
 
     console.log("🔎 Matched request:", anyRequest);

@@ -1,4 +1,4 @@
-
+// superAdmin.controller.js — v2
 import jwt from "jsonwebtoken";
 import SuperAdmin from "../models/superAdminModel.js";
 import Blog from "../models/BlogModel.js";
