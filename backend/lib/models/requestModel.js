@@ -12,8 +12,7 @@ let requestSchema = new mongoose.Schema({
     email: {
         required: true,
         type: String,
-        unique:true
-
+        unique: true
     },
     status: {
         type: String,
@@ -22,6 +21,15 @@ let requestSchema = new mongoose.Schema({
     businessType: { 
         type: String,
         required: true
+    },
+    reviewedAt: {
+        type: Date
+    },
+    reviewedBy: {
+        type: String
+    },
+    rejectionReason: {
+        type: String
     }
 }, { timestamps: true });
 

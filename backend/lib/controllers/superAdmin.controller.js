@@ -66,16 +66,11 @@ export const getCompanyWiseBlogCount = async (req, res) => {
   }
 };
 
-export const getRequests = async (req, res) => { // Fixed parameter name
+export const getRequests = async (req, res) => {
   try {
-    const data = await Request.find();
-               
-    if (!data || data.length === 0) { // Better condition check
-      return res.json({ success: false, message: "No requests found" });
-    }
-    
-    res.json({ success: true, data }); // More consistent response structure
-  } catch (error) { // Added error parameter
+    const data = await Request.find().sort({ createdAt: -1 });
+    res.json({ success: true, data });
+  } catch (error) {
     res.json({ success: false, error: error.message, message: "Failed to fetch requests" });
   }
 };
