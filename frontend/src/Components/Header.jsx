@@ -2,6 +2,7 @@
 import React, { useRef, useState } from 'react';
 import axios from 'axios';
 import { toast } from 'react-toastify';
+import { baseURL } from '@/config/api';
 
 const Header = () => {
   const [email, setEmail] = useState("");
@@ -10,21 +11,24 @@ const Header = () => {
 
   const onSubmitHandler = async (e) => {
     e.preventDefault();
-    const formData = new FormData();
-    formData.append("email", email);
-    formData.append("company", company);
+    const trimmed = email.trim();
+    if (!trimmed) return;
+
     try {
-      const baseURL = process.env.NEXT_PUBLIC_BASE_URL || "http://localhost:5000";
-      const response = await axios.post(`${baseURL}/api/email`, formData);
+      const response = await axios.post(`${baseURL}/api/blog/subscribe`, {
+        email: trimmed,
+        company,
+      }, { headers: { "Content-Type": "application/json" } });
+
       if (response.data.success) {
-        toast.success(response.data.msg);
+        toast.success(response.data.msg || "Subscribed successfully!");
         setEmail("");
-        inputRef.current.value = '';
+        if (inputRef.current) inputRef.current.value = '';
       } else {
-        toast.error(response.data.message || "Error");
+        toast.error(response.data.message || "Subscription failed");
       }
     } catch (error) {
-      toast.error("Error occurred while subscribing");
+      toast.error(error?.response?.data?.message || "Error occurred while subscribing");
     }
   };
 
