@@ -1,8 +1,7 @@
 'use client'
 
 import React, { useEffect, useState } from 'react'
-
-const NEXT_PUBLIC_BASE_URL = process.env.NEXT_PUBLIC_BASE_URL || 'http://localhost:5000'
+import { baseURL } from '@/config/api'
 
 const statusConfig = {
   pending:  { label: 'Pending',  dot: 'bg-amber-400',  badge: 'bg-amber-400/10 text-amber-400 border-amber-400/20' },
@@ -33,7 +32,7 @@ export default function SuperAdminPanel() {
     try {
       setLoading(true)
       const token = localStorage.getItem('token')
-      const res = await fetch(`${NEXT_PUBLIC_BASE_URL}/api/super-admin/getRequests`, {
+      const res = await fetch(`${baseURL}/api/super-admin/getRequests`, {
         headers: { Authorization: `Bearer ${token}` },
       })
       const data = await res.json()
@@ -54,7 +53,7 @@ export default function SuperAdminPanel() {
   const handleDelete = async (id) => {
     if (!confirm('Delete this request?')) return
     const token = localStorage.getItem('token')
-    const res = await fetch(`${NEXT_PUBLIC_BASE_URL}/api/super-admin/deleteRequest/${id}`, {
+    const res = await fetch(`${baseURL}/api/super-admin/deleteRequest/${id}`, {
       method: 'DELETE',
       headers: { Authorization: `Bearer ${token}` },
     })
@@ -72,7 +71,7 @@ export default function SuperAdminPanel() {
     setIsProcessing(true)
     try {
       const token = localStorage.getItem('token')
-      const res = await fetch(`${NEXT_PUBLIC_BASE_URL}/api/super-admin/approveRequest/${id}`, {
+      const res = await fetch(`${baseURL}/api/super-admin/approveRequest/${id}`, {
         method: 'PUT',
         headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${token}` },
         body: JSON.stringify({ status: newStatus, rejectionReason }),
